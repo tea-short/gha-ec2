@@ -1,0 +1,84 @@
+name: Apply
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  deploy-dev:
+    name: Deploy Dev
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform apply
+        id: tf-apply
+        env:
+          TF_WORKSPACE: default
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Terraform plan
+        id: tf-plan
+        env:
+          TF_WORKSPACE: default
+        run: |
+          terraform init
+          terraform plan -detailed-exitcode
+
+  deploy-prod:
+    name: Deploy Prod
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform apply
+        id: tf-apply
+        env:
+          TF_WORKSPACE: default
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Terraform plan
+        id: tf-plan
+        env:
+          TF_WORKSPACE: default
+        run: |
+          terraform init
+          terraform plan -detailed-exitcode
