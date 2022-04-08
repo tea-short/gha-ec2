@@ -1,4 +1,4 @@
-data aws_secretsmanager_secret "bootstrap" {
+data "aws_secretsmanager_secret" "bootstrap" {
   name = "bootstrap"
 }
 
@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "gha" {
 }
 
 resource "aws_iam_policy" "gha" {
-  name   = "${local.application}"
+  name   = local.application
   policy = data.aws_iam_policy_document.gha.json
 }
 

@@ -1,7 +1,7 @@
 locals {
   pat_secret_name = "bootstrap"
-  org = "tea-short"
-  repo = "tf-gha"
+  org             = "tea-short"
+  repo            = "tf-gha"
 }
 
 data "template_cloudinit_config" "gha" {
